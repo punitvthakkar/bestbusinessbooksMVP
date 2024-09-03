@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Business Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            margin-bottom: 20px;
+            overflow-x: auto; /* Enable horizontal scrolling for categories */
+            white-space: nowrap; /* Prevent categories from wrapping */
+        }
+        nav button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent button text from wrapping */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px; 
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        nav button.active {
+        background-color: #4CAF50;
+        color: white;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Best Business Books</h1>
+        <input type="text" id="searchInput" placeholder="Search for books...">
+    </header>
+    <nav id="categories"></nav>
+    <select id="sortOptions">
+        <option value="title">Sort by Title</option>
+        <option value="author">Sort by Author</option>
+        <option value="category">Sort by Category</option>
+        <!-- Add more sorting options as needed -->
+    </select>
+    <main id="bookList"></main>
+
+    <script>
+        // Sample JSON data (replace with actual data or load from external file)
+        let books = [
+         {
+    "title": "The Wealth of Nations",
+    "author": "Adam Smith",
+    "category": "Economics, Capitalism, Political Economy",
+    "summary": "A foundational work on free market economics and the division of labor",
+    "amazonLink": "https://www.amazon.com/placeholder-wealth-of-nations"
+  },
+  {
+    "title": "Security Analysis",
+    "author": "Benjamin Graham and David Dodd",
+    "category": "Investing, Finance, Value Investing",
+    "summary": "The bible of value investing, detailing methods for analyzing securities",
+    "amazonLink": "https://www.amazon.com/placeholder-security-analysis"
+  },
+  {
+    "title": "The Intelligent Investor",
+    "author": "Benjamin Graham",
+    "category": "Investing, Personal Finance, Value Investing",
+    "summary": "A guide to value investing for individual investors",
+    "amazonLink": "https://www.amazon.com/placeholder-intelligent-investor"
+  },
+  {
+    "title": "Capitalism, Socialism and Democracy",
+    "author": "Joseph Schumpeter",
+    "category": "Economics, Political Economy, Capitalism",
+    "summary": "An analysis of economic and political systems, introducing the concept of creative destruction",
+    "amazonLink": "https://www.amazon.com/placeholder-capitalism-socialism-democracy"
+  },
+  {
+    "title": "The General Theory of Employment, Interest and Money",
+    "author": "John Maynard Keynes",
+    "category": "Economics, Macroeconomics, Monetary Policy",
+    "summary": "A seminal work on macroeconomics that revolutionized economic theory",
+    "amazonLink": "https://www.amazon.com/placeholder-general-theory"
+  },
+  {
+    "title": "The Innovator's Dilemma",
+    "author": "Clayton Christensen",
+    "category": "Innovation, Business Strategy, Technology",
+    "summary": "Explores how successful companies can fail by doing everything right",
+    "amazonLink": "https://www.amazon.com/placeholder-innovators-dilemma"
+  },
+  {
+    "title": "The Black Swan",
+    "author": "Nassim Nicholas Taleb",
+    "category": "Risk Management, Probability, Economics",
+    "summary": "An examination of rare events and their outsized impact on history",
+    "amazonLink": "https://www.amazon.com/placeholder-black-swan"
+  },
+  {
+    "title": "Thinking, Fast and Slow",
+    "author": "Daniel Kahneman",
+    "category": "Behavioral Economics, Psychology, Decision Making",
+    "summary": "An exploration of the two systems that drive the way we think",
+    "amazonLink": "https://www.amazon.com/placeholder-thinking-fast-and-slow"
+  },
+  {
+    "title": "The Lean Startup",
+    "author": "Eric Ries",
+    "category": "Entrepreneurship, Business Strategy, Innovation",
+    "summary": "A new approach to business that emphasizes rapid experimentation and customer feedback",
+    "amazonLink": "https://www.amazon.com/placeholder-lean-startup"
+  },
+  {
+    "title": "Good to Great",
+    "author": "Jim Collins",
+    "category": "Business Management, Leadership, Corporate Culture",
+    "summary": "A study of companies that made the leap from good to great results",
+    "amazonLink": "https://www.amazon.com/placeholder-good-to-great"
+  },
+  {
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "category": "Strategy, Leadership, Military",
+    "summary": "Ancient Chinese military treatise applied to business strategy",
+    "amazonLink": "https://www.amazon.com/placeholder-art-of-war"
+  },
+  {
+    "title": "Principles",
+    "author": "Ray Dalio",
+    "category": "Business Management, Personal Development, Investing",
+    "summary": "A set of principles for work and life from a successful hedge fund manager",
+    "amazonLink": "https://www.amazon.com/placeholder-principles"
+  },
+  {
+    "title": "Freakonomics",
+    "author": "Steven D. Levitt and Stephen J. Dubner",
+    "category": "Economics, Social Sciences, Data Analysis",
+    "summary": "Explores the hidden side of everything using economic analysis",
+    "amazonLink": "https://www.amazon.com/placeholder-freakonomics"
+  },
+  {
+    "title": "The Innovator's Solution",
+    "author": "Clayton Christensen and Michael E. Raynor",
+    "category": "Innovation, Business Strategy, Technology",
+    "summary": "A guide to creating and sustaining successful growth in business",
+    "amazonLink": "https://www.amazon.com/placeholder-innovators-solution"
+  },
+  {
+    "title": "Competitive Strategy",
+    "author": "Michael E. Porter",
+    "category": "Business Strategy, Competition, Industry Analysis",
+    "summary": "Techniques for analyzing industries and competitors to gain competitive advantage",
+    "amazonLink": "https://www.amazon.com/placeholder-competitive-strategy"
+  },
+  {
+    "title": "The Outsiders",
+    "author": "William N. Thorndike",
+    "category": "Business Management, Leadership, Finance",
+    "summary": "Eight unconventional CEOs and their radically rational blueprint for success",
+    "amazonLink": "https://www.amazon.com/placeholder-the-outsiders"
+  },
+  {
+    "title": "Influence: The Psychology of Persuasion",
+    "author": "Robert B. Cialdini",
+    "category": "Psychology, Marketing, Negotiation",
+    "summary": "Explains the psychology of why people say yes and how to apply these insights",
+    "amazonLink": "https://www.amazon.com/placeholder-influence"
+  },
+  {
+    "title": "Zero to One",
+    "author": "Peter Thiel with Blake Masters",
+    "category": "Entrepreneurship, Startups, Innovation",
+    "summary": "Notes on startups, or how to build the future",
+    "amazonLink": "https://www.amazon.com/placeholder-zero-to-one"
+  },
+  {
+    "title": "The Lean Startup",
+    "author": "Eric Ries",
+    "category": "Entrepreneurship, Business Strategy, Innovation",
+    "summary": "How today's entrepreneurs use continuous innovation to create radically successful businesses",
+    "amazonLink": "https://www.amazon.com/placeholder-lean-startup"
+  },
+  {
+    "title": "Fooled by Randomness",
+    "author": "Nassim Nicholas Taleb",
+    "category": "Probability, Risk Management, Psychology",
+    "summary": "The hidden role of chance in life and in the markets",
+    "amazonLink": "https://www.amazon.com/placeholder-fooled-by-randomness"
+  },
+  {
+    "title": "The Innovator's Dilemma",
+    "author": "Clayton M. Christensen",
+    "category": "Innovation, Business Strategy, Technology",
+    "summary": "When new technologies cause great firms to fail",
+    "amazonLink": "https://www.amazon.com/placeholder-innovators-dilemma"
+  },
+  {
+    "title": "Thinking in Systems",
+    "author": "Donella H. Meadows",
+    "category": "Systems Thinking, Problem Solving, Sustainability",
+    "summary": "A primer on systems thinking and its application to various fields",
+    "amazonLink": "https://www.amazon.com/placeholder-thinking-in-systems"
+  },
+  {
+    "title": "The Tipping Point",
+    "author": "Malcolm Gladwell",
+    "category": "Sociology, Marketing, Psychology",
+    "summary": "How little things can make a big difference in social trends",
+    "amazonLink": "https://www.amazon.com/placeholder-tipping-point"
+  },
+  {
+    "title": "Business Adventures",
+    "author": "John Brooks",
+    "category": "Business History, Finance, Corporate Culture",
+    "summary": "Twelve classic tales from the world of Wall Street",
+    "amazonLink": "https://www.amazon.com/placeholder-business-adventures"
+  },
+  {
+    "title": "The Effective Executive",
+    "author": "Peter F. Drucker",
+    "category": "Management, Leadership, Productivity",
+    "summary": "The definitive guide to getting the right things done",
+    "amazonLink": "https://www.amazon.com/placeholder-effective-executive"
+  },
+  {
+    "title": "The Power Broker",
+    "author": "Robert Caro",
+    "category": "Politics, Administration, Infrastructure, Public Service, Operations",
+    "summary": "A look at one man's real world achievements and follies that built today's New York",
+    "amazonLink": "https://www.amazon.com/placeholder-power-broker"
+    },
+    {
+    "title": "The Price of Time: The Real Story of Interest",
+    "author": "Edward Chancellor",
+    "category": "History, Economics, Interest Rates, Finance, Mesopotamia",
+    "summary": "A comprehensive and profoundly relevant history of interest from one of the world's leading financial writers",
+    "amazonLink": "https://www.amazon.com/placeholder-price-of-time"
+    },
+    {
+    "title": "The Rise and Fall of American Growth",
+    "author": "Robert J. Gordon",
+    "category": "Economic History, Technological Progress, Living Standards",
+    "summary": "An in-depth analysis of the extraordinary century of economic progress that shaped modern America",
+    "amazonLink": "https://www.amazon.com/placeholder-rise-and-fall-of-american-growth"
+    },
+    {
+    "title": "The Ascent of Money",
+    "author": "Niall Ferguson",
+    "category": "Financial History, Economics, Banking, Globalization",
+    "summary": "A financial history of the world, tracing the evolution of money and financial systems",
+    "amazonLink": "https://www.amazon.com/placeholder-ascent-of-money"
+    },
+    {
+    "title": "The Dollar Trap",
+    "author": "Eswar S. Prasad",
+    "category": "International Finance, Monetary Policy, Global Economy",
+    "summary": "An insightful examination of the dollar's continued dominance in the world economy",
+    "amazonLink": "https://www.amazon.com/placeholder-dollar-trap"
+    },
+    {
+    "title": "Stabilizing an Unstable Economy",
+    "author": "Hyman P. Minsky",
+    "category": "Economics, Financial Instability, Monetary Policy",
+    "summary": "A groundbreaking analysis of financial crises and the inherent instability of capitalist economies",
+    "amazonLink": "https://www.amazon.com/placeholder-stabilizing-an-unstable-economy"
+    },
+    {
+    "title": "The Great Transformation",
+    "author": "Karl Polanyi",
+    "category": "Economic History, Political Economy, Social Theory",
+    "summary": "A seminal work on the political and economic origins of our time",
+    "amazonLink": "https://www.amazon.com/placeholder-great-transformation"
+    },
+    {
+    "title": "The Theory of the Leisure Class",
+    "author": "Thorstein Veblen",
+    "category": "Sociology, Economics, Consumer Behavior",
+    "summary": "A classic critique of conspicuous consumption and the leisure class in the Industrial Age",
+    "amazonLink": "https://www.amazon.com/placeholder-theory-of-the-leisure-class"
+    },
+    {
+    "title": "The Road to Serfdom",
+    "author": "Friedrich Hayek",
+    "category": "Political Philosophy, Economics, Liberty",
+    "summary": "A passionate defense of classical liberalism and a warning against the dangers of central planning",
+    "amazonLink": "https://www.amazon.com/placeholder-road-to-serfdom"
+    },
+    {
+    "title": "Exit, Voice, and Loyalty",
+    "author": "Albert O. Hirschman",
+    "category": "Political Economy, Organizational Behavior, Social Theory",
+    "summary": "An innovative framework for understanding responses to decline in firms, organizations, and states",
+    "amazonLink": "https://www.amazon.com/placeholder-exit-voice-and-loyalty"
+    },
+    {
+    "title": "The Sovereign Individual",
+    "author": "James Dale Davidson and Lord William Rees-Mogg",
+    "category": "Futurism, Technology, Economics, Politics",
+    "summary": "A prescient analysis of how digital technology will reshape the world and empower individuals",
+    "amazonLink": "https://www.amazon.com/placeholder-sovereign-individual"
+    },
+    {
+    "title": "The Mystery of Capital",
+    "author": "Hernando de Soto",
+    "category": "Development Economics, Property Rights, Capitalism",
+    "summary": "An exploration of why capitalism triumphs in the West and fails everywhere else",
+    "amazonLink": "https://www.amazon.com/placeholder-mystery-of-capital"
+    },
+    {
+    "title": "The Evolution of Cooperation",
+    "author": "Robert Axelrod",
+    "category": "Game Theory, Social Science, Evolution",
+    "summary": "A groundbreaking study on the emergence of cooperation in a world of self-seeking egoists",
+    "amazonLink": "https://www.amazon.com/placeholder-evolution-of-cooperation"
+    },
+    {
+    "title": "The Nature of the Firm",
+    "author": "Ronald Coase",
+    "category": "Economics, Organizational Theory, Transaction Costs",
+    "summary": "A seminal paper exploring why firms exist and what determines their size and scope",
+    "amazonLink": "https://www.amazon.com/placeholder-nature-of-the-firm"
+    },
+    {
+    "title": "Manias, Panics, and Crashes",
+    "author": "Charles P. Kindleberger",
+    "category": "Financial History, Economic Crises, Behavioral Finance",
+    "summary": "A comprehensive history of financial crises and the patterns that precede them",
+    "amazonLink": "https://www.amazon.com/placeholder-manias-panics-and-crashes"
+    },
+    {
+    "title": "The World for Sale",
+    "author": "Javier Blas and Jack Grim",
+    "category": "Business, Economics, Commodities, Geopolitics",
+    "summary": "An exposé of the secretive world of commodity traders and their influence on global events.",
+    "amazonLink": "https://www.amazon.com/World-Sale-Merchants-Made-History/dp/0593137692"
+  },
+  {
+    "title": "Chip War: The Fight for the World's Most Critical Technology",
+    "author": "Chris Miller",
+    "category": "Technology, Geopolitics, Economics, Semiconductor Industry",
+    "summary": "A deep dive into the geopolitical and economic significance of the semiconductor industry.",
+    "amazonLink": "https://www.amazon.com/Chip-War-Fight-Worlds-Technology/dp/1982187497"
+  },
+  {
+    "title": "The Power Law: Venture Capital and the Making of the New Future",
+    "author": "Sebastian Mallaby",
+    "category": "Business, Venture Capital, Technology, Finance",
+    "summary": "A comprehensive history of the venture capital industry and its impact on the tech world.",
+    "amazonLink": "https://www.amazon.com/Power-Law-Venture-Capital-Making/dp/1591848202"
+  },
+  {
+    "title": "Narrative Economics: How Stories Go Viral and Drive Major Economic Events",
+    "author": "Robert Shiller",
+    "category": "Economics, Behavioral Economics, Psychology, Finance",
+    "summary": "Explores the role of narratives and stories in shaping economic behavior and markets.",
+    "amazonLink": "https://www.amazon.com/Narrative-Economics-Stories-Viral-Economic/dp/0691182299"
+  },
+  {
+    "title": "Scale: The Universal Laws of Growth, Innovation, Sustainability, and the Pace of Life in Organisms, Cities, Economies, and Companies",
+    "author": "Geoffrey West",
+    "category": "Science, Complexity Theory, Economics, Urban Planning",
+    "summary": "Examines the underlying principles that govern growth and scaling in various systems.",
+    "amazonLink": "https://www.amazon.com/Scale-Universal-Laws-Organisms-Companies/dp/1594205582"
+  },
+  {
+    "title": "The Age of Surveillance Capitalism: The Fight for a Human Future at the New Frontier of Power",
+    "author": "Shoshana Zuboff",
+    "category": "Technology, Privacy, Data, Business, Society",
+    "summary": "A critical analysis of the rise of surveillance capitalism and its implications for society.",
+    "amazonLink": "https://www.amazon.com/Age-Surveillance-Capitalism-Fight-Future/dp/1593765697"
+  },
+  {
+    "title": "The Sixth Extinction: An Unnatural History",
+    "author": "Elizabeth Kolbert",
+    "category": "Science, Environment, Extinction, Biology, History",
+    "summary": "A Pulitzer Prize-winning exploration of the ongoing sixth mass extinction event.",
+    "amazonLink": "https://www.amazon.com/Sixth-Extinction-Unnatural-History/dp/0805092994"
+  },
+  {
+    "title": "Sapiens: A Brief History of Humankind",
+    "author": "Yuval Noah Harari",
+    "category": "History, Anthropology, Evolution, Society",
+    "summary": "A sweeping history of humankind from the Stone Age to the present.",
+    "amazonLink": "https://www.amazon.com/Sapiens-Brief-History-Humankind/dp/0062316095"
+  },
+  {
+    "title": "Homo Deus: A Brief History of Tomorrow",
+    "author": "Yuval Noah Harari",
+    "category": "Futurism, Technology, Society, Philosophy",
+    "summary": "Explores the potential future of humanity and the challenges we face.",
+    "amazonLink": "https://www.amazon.com/Homo-Deus-Brief-History-Tomorrow/dp/0062464310"
+  },
+  {
+    "title": "21 Lessons for the 21st Century",
+    "author": "Yuval Noah Harari",
+    "category": "Society, Politics, Technology, Future",
+    "summary": "Analyzes the major challenges facing humanity in the 21st century.",
+    "amazonLink": "https://www.amazon.com/21-Lessons-21st-Century/dp/0525512176"
+  },
+  {
+    "title": "The Fourth Industrial Revolution",
+    "author": "Klaus Schwab",
+    "category": "Technology, Business, Society, Economics",
+    "summary": "Explores the impact of emerging technologies on the economy and society.",
+    "amazonLink": "https://www.amazon.com/Fourth-Industrial-Revolution/dp/0525691696"
+  },
+  {
+    "title": "COVID-19: The Great Reset",
+    "author": "Klaus Schwab and Thierry Malleret",
+    "category": "Society, Economics, Politics, Pandemic",
+    "summary": "Discusses the potential for a global reset in the wake of the COVID-19 pandemic.",
+    "amazonLink": "https://www.amazon.com/COVID-19-Great-Reset/dp/2940630123"
+  },
+  {
+    "title": "The Code Breaker: Jennifer Doudna, Gene Editing, and the Future of the Human Race",
+    "author": "Walter Isaacson",
+    "category": "Science, Biography, Technology, CRISPR",
+    "summary": "A biography of Jennifer Doudna, a pioneer in CRISPR gene editing technology.",
+    "amazonLink": "https://www.amazon.com/Code-Breaker-Jennifer-Doudna-Editing/dp/1982115855"
+  },
+  {
+    "title": "The Innovators: How a Group of Hackers, Geniuses, and Geeks Created the Digital Revolution",
+    "author": "Walter Isaacson",
+    "category": "Technology, History, Innovation, Computing",
+    "summary": "A history of the digital revolution and the people who made it happen.",
+    "amazonLink": "https://www.amazon.com/Innovators-Group-Hackers-Geniuses-Revolution/dp/147670869X"
+  },
+  {
+    "title": "Steve Jobs",
+    "author": "Walter Isaacson",
+    "category": "Biography, Technology, Business, Apple",
+    "summary": "The definitive biography of Apple co-founder Steve Jobs.",
+    "amazonLink": "https://www.amazon.com/Steve-Jobs-Walter-Isaacson/dp/1451648537"
+  },
+  {
+    "title": "Leonardo da Vinci",
+    "author": "Walter Isaacson",
+    "category": "Biography, Art, Science, History",
+    "summary": "A biography of the Renaissance genius Leonardo da Vinci.",
+    "amazonLink": "https://www.amazon.com/Leonardo-da-Vinci-Walter-Isaacson/dp/1501139150"
+  },
+  {
+    "title": "Benjamin Franklin: An American Life",
+    "author": "Walter Isaacson",
+    "category": "Biography, History, American Revolution",
+    "summary": "A biography of Benjamin Franklin, one of the Founding Fathers of the United States.",
+    "amazonLink": "https://www.amazon.com/Benjamin-Franklin-American-Life-Isaacson/dp/074325807X"
+  },
+  {
+    "title": "Einstein: His Life and Universe",
+    "author": "Walter Isaacson",
+    "category": "Biography, Science, Physics",
+    "summary": "A biography of Albert Einstein, the renowned physicist.",
+    "amazonLink": "https://www.amazon.com/Einstein-His-Life-Universe/dp/0743264736"
+  },
+  {
+    "title": "Kissinger: 1923-1968: The Idealist",
+    "author": "Walter Isaacson",
+    "category": "Biography, Politics, History, Diplomacy",
+    "summary": "The first volume of a comprehensive biography of Henry Kissinger, covering his early life and rise to power.",
+    "amazonLink": "https://www.amazon.com/Kissinger-1923-1968-Idealist-Walter-Isaacson/dp/1400067529"
+  },
+  {
+    "title": "The Fish That Ate the Whale: The Life and Times of Sam Zemurray",
+    "author": "Rich Cohen",
+    "category": "Biography, Business, History, United Fruit Company",
+    "summary": "The story of Sam Zemurray, who built a banana empire and influenced Central American politics.",
+    "amazonLink": "https://www.amazon.com/Fish-That-Ate-Whale-Zemurray/dp/0374157911"
+  },
+  {
+    "title": "The Devil in the White City: Murder, Magic, and Madness at the Fair That Changed America",
+    "author": "Erik Larson",
+    "category": "History, True Crime, Chicago World's Fair",
+    "summary": "Interweaves the stories of the 1893 Chicago World's Fair and a serial killer who operated during the event.",
+    "amazonLink": "https://www.amazon.com/Devil-White-City-Madness-Changed/dp/0375725601"
+  },
+  {
+    "title": "In the Garden of Beasts: Love, Terror, and an American Family in Hitler's Berlin",
+    "author": "Erik Larson",
+    "category": "History, World War II, Nazi Germany",
+    "summary": "The story of the American ambassador to Germany and his family in the years leading up to World War II.",
+    "amazonLink": "https://www.amazon.com/Garden-Beasts-Terror-American-Hitlers/dp/0307408846"
+  },
+  {
+    "title": "Isaac's Storm: A Man, a Time, and the Deadliest Hurricane in History",
+    "author": "Erik Larson",
+    "category": "History, Weather, Disaster, Galveston Hurricane",
+    "summary": "A gripping account of the 1900 Galveston hurricane, one of the deadliest natural disasters in U.S. history.",
+    "amazonLink": "https://www.amazon.com/Isaacs-Storm-Deadliest-Hurricane-History/dp/0312427444"
+  },
+  {
+    "title": "The Splendid Ruin: Burning of Washington, 1814",
+    "author": "Erik Larson",
+    "category": "History, War of 1814, Burning of Washington",
+    "summary": "Recounts the burning of Washington, D.C., by British forces during the War of 1814.",
+    "amazonLink": "https://www.amazon.com/Splendid-Ruin-Burning-Washington-1814/dp/0307958298"
+  },
+  {
+    "title": "Thunderstruck",
+    "author": "Erik Larson",
+    "category": "History, True Crime, Science, Marconi",
+    "summary": "A tale of two intertwined stories: Guglielmo Marconi's development of wireless telegraphy and a murder case.",
+    "amazonLink": "https://www.amazon.com/Thunderstruck-Erik-Larson/dp/0307592704"
+  },
+  {
+    "title": "The Dead Hand: The Untold Story of the Cold War Arms Race and Its Dangerous Legacy",
+    "author": "David E. Hoffman",
+    "category": "History, Cold War, Nuclear Weapons, Military",
+    "summary": "A chilling account of the Cold War nuclear arms race and its lasting consequences.",
+    "amazonLink": "https://www.amazon.com/Dead-Hand-Untold-Dangerous-Legacy/dp/0385524370"
+  },
+  {
+    "title": "The Billion Dollar Spy: A True Story of Cold War Espionage and Betrayal",
+    "author": "David E. Hoffman",
+    "category": "History, Espionage, Cold War, Soviet Union",
+    "summary": "The true story of Adolf Tolkachev, a Soviet engineer who became the CIA's most valuable asset during the Cold War.",
+    "amazonLink": "https://www.amazon.com/Billion-Dollar-Spy-Espionage-Betrayal/dp/0385534155"
+  },
+  {
+    "title": "The Oligarchs: Wealth and Power in the New Russia",
+    "author": "David E. Hoffman",
+    "category": "History, Russia, Politics, Business, Oligarchy",
+    "summary": "An examination of the rise of the oligarchs in post-Soviet Russia.",
+    "amazonLink": "https://www.amazon.com/Oligarchs-Wealth-Power-Russia-ebook/dp/B000FC1L4K"
+  },
+  {
+    "title": "Putin's Kleptocracy: Who Owns Russia?",
+    "author": "Karen Dawisha",
+    "category": "Politics, Russia, Corruption, Putin",
+    "summary": "A detailed investigation into the corruption and kleptocracy that characterize Vladimir Putin's regime.",
+    "amazonLink": "https://www.amazon.com/Putins-Kleptocracy-Who-Owns-Russia/dp/1476795199"
+  },
+  {
+    "title": "Red Notice: A True Story of High Finance, Murder, and One Man's Fight for Justice",
+    "author": "Bill Browder",
+    "category": "Business, True Crime, Russia, Finance, Corruption",
+    "summary": "Bill Browder's account of his fight for justice after exposing corruption in Russia and the murder of his lawyer, Sergei Magnitsky.",
+    "amazonLink": "https://www.amazon.com/Red-Notice-Finance-Murder-Justice/dp/147675571X"
+  },
+  {
+    "title": "Freezing Order: A True Story of Money Laundering, Murder, and Surviving Putin's Wrath",
+    "author": "Bill Browder",
+    "category": "Business, True Crime, Russia, Finance, Corruption",
+    "summary": "The sequel to 'Red Notice', detailing Bill Browder's continued efforts to expose corruption and seek justice for Sergei Magnitsky.",
+    "amazonLink": "https://www.amazon.com/Freezing-Order-Laundering-Surviving-Putins/dp/1501166843"
+  },
+  {
+    "title": "Bad Blood: Secrets and Lies in a Silicon Valley Startup",
+    "author": "John Carreyrou",
+    "category": "Business, True Crime, Technology, Theranos",
+    "summary": "The story of the rise and fall of Theranos, a blood-testing company founded by Elizabeth Holmes.",
+    "amazonLink": "https://www.amazon.com/Bad-Blood-Secrets-Silicon-Startup/dp/0385543168"
+  },
+  {
+    "title": "The Informant: A True Story of Money, Medicine, and Murder",
+    "author": "Kurt Eichenwald",
+    "category": "Business, True Crime, Pharmaceutical Industry",
+    "summary": "An exposé of price-fixing and corruption in the pharmaceutical industry.",
+    "amazonLink": "https://www.amazon.com/Informant-Story-Medicine-Murder-ebook/dp/B000FC2932"
+  },
+  {
+    "title": "Den of Thieves",
+    "author": "James B. Stewart",
+    "category": "Business, True Crime, Finance, Insider Trading",
+    "summary": "An account of the insider trading scandals of the 1980s.",
+    "amazonLink": "https://www.amazon.com/Den-Thieves-James-Stewart/dp/0671701625"
+  },
+  {
+    "title": "Blind Ambition: The White House Years",
+    "author": "John Ehrlichman",
+    "category": "Politics, Memoir, Watergate Scandal",
+    "summary": "A memoir by John Ehrlichman, a key figure in the Watergate scandal.",
+    "amazonLink": "https://www.amazon.com/Blind-Ambition-White-House-Years/dp/0671848387"
+  },
+  {
+    "title": "All the President's Men",
+    "author": "Carl Bernstein and Bob Woodward",
+    "category": "Journalism, Watergate Scandal, Politics",
+    "summary": "The classic account of the Watergate scandal by the reporters who broke the story.",
+    "amazonLink": "https://www.amazon.com/All-Presidents-Men-Carl-Bernstein/dp/067121781X"
+  },
+  {
+    "title": "The Final Days",
+    "author": "Bob Woodward and Carl Bernstein",
+    "category": "Journalism, Watergate Scandal, Politics",
+    "summary": "A detailed account of the final days of the Nixon presidency.",
+    "amazonLink": "https://www.amazon.com/Final-Days-Bob-Woodward/dp/0671222968"
+  },
+  {
+    "title": "Fear: Trump in the White House",
+    "author": "Bob Woodward",
+    "category": "Politics, Journalism, Trump Presidency",
+    "summary": "A behind-the-scenes look at the Trump presidency.",
+    "amazonLink": "https://www.amazon.com/Fear-Trump-White-House/dp/1501175516"
+  },
+  {
+    "title": "Rage",
+    "author": "Bob Woodward",
+    "category": "Politics, Journalism, Trump Presidency",
+    "summary": "A follow-up to 'Fear', based on interviews with Donald Trump.",
+    "amazonLink": "https://www.amazon.com/Rage-Bob-Woodward/dp/1982131731"
+  },
+  {
+    "title": "Peril",
+    "author": "Bob Woodward and Robert Costa",
+    "category": "Politics, Journalism, Trump Presidency, Biden Presidency",
+    "summary": "An account of the transition of power from Donald Trump to Joe Biden.",
+    "amazonLink": "https://www.amazon.com/Peril-Bob-Woodward/dp/1982182045"
+  },
+  {
+    "title": "Fire and Fury: Inside the Trump White House",
+    "author": "Michael Wolff",
+    "category": "Politics, Journalism, Trump Presidency",
+    "summary": "A controversial account of the early days of the Trump presidency.",
+    "amazonLink": "https://www.amazon.com/Fire-Fury-Inside-Trump-White/dp/1250158070"
+  },
+  {
+    "title": "Siege: Trump Under Fire",
+    "author": "Michael Wolff",
+    "category": "Politics, Journalism, Trump Presidency",
+    "summary": "A follow-up to 'Fire and Fury', covering the second half of Trump's first term.",
+    "amazonLink": "https://www.amazon.com/Siege-Trump-Under-Fire/dp/1250203934"
+  },
+  {
+    "title": "Landslide: The Final Days of the Trump Presidency and the Birth of the Biden Administration",
+    "author": "Michael Wolff",
+    "category": "Politics, Journalism, Trump Presidency, Biden Presidency",
+    "summary": "An account of the final days of the Trump presidency and the transition to the Biden administration.",
+    "amazonLink": "https://www.amazon.com/Landslide-Final-Presidency-Administration-ebook/dp/B08ZY9255Q"
+  },
+  {
+    "title": "Too Big to Fail: The Inside Story of How Wall Street and Washington Fought to Save the Financial System—and Themselves",
+    "author": "Andrew Ross Sorkin",
+    "category": "Business, Finance, Financial Crisis, Wall Street",
+    "summary": "A detailed account of the 2008 financial crisis and the government's response.",
+    "amazonLink": "https://www.amazon.com/Too-Big-Fail-Inside-Financial/dp/0670021253"
+  },
+  {
+    "title": "Flash Boys: A Wall Street Revolt",
+    "author": "Michael Lewis",
+    "category": "Business, Finance, High-Frequency Trading, Wall Street",
+    "summary": "An investigation into high-frequency trading and its impact on the stock market.",
+    "amazonLink": "https://www.amazon.com/Flash-Boys-Wall-Street-Revolt/dp/0771033965"
+  },
+  {
+    "title": "The Big Short: Inside the Doomsday Machine",
+    "author": "Michael Lewis",
+    "category": "Business, Finance, Financial Crisis, Housing Bubble",
+    "summary": "The story of a group of investors who bet against the housing market and profited from the 2008 financial crisis.",
+    "amazonLink": "https://www.amazon.com/Big-Short-Inside-Doomsday-Machine/dp/0393072231"
+  },
+  {
+    "title": "Liar's Poker",
+    "author": "Michael Lewis",
+    "category": "Business, Finance, Wall Street, Memoir",
+    "summary": "Michael Lewis's memoir of his time working at Salomon Brothers during the 1980s.",
+    "amazonLink": "https://www.amazon.com/Liars-Poker-Rising-Through-Salomon/dp/0393327500"
+  },
+  {
+    "title": "Moneyball: The Art of Winning an Unfair Game",
+    "author": "Michael Lewis",
+    "category": "Sports, Business, Statistics, Baseball",
+    "summary": "The story of how the Oakland Athletics used data analysis to compete with richer teams.",
+    "amazonLink": "https://www.amazon.com/Moneyball-Art-Winning-Unfair-Game/dp/0393057658"
+  },
+  {
+    "title": "The Blind Side: Evolution of a Game",
+    "author": "Michael Lewis",
+    "category": "Sports, Biography, Football, Michael Oher",
+    "summary": "The story of Michael Oher, a homeless teenager who became an NFL star.",
+    "amazonLink": "https://www.amazon.com/Blind-Side-Evolution-Game/dp/0393330401"
+  },
+  {
+    "title": "The Fifth Risk",
+    "author": "Michael Lewis",
+    "category": "Politics, Government, Risk Management",
+    "summary": "Explores the risks to American government and society under the Trump administration.",
+    "amazonLink": "https://www.amazon.com/Fifth-Risk-Michael-Lewis/dp/0393357713"
+  },
+  {
+    "title": "Premonition: A Pandemic Story",
+    "author": "Michael Lewis",
+    "category": "Science, Public Health, Pandemic, COVID-19",
+    "summary": "The story of a group of scientists who tried to warn the world about the COVID-19 pandemic.",
+    "amazonLink": "https://www.amazon.com/Premonition-Pandemic-Story-Michael-Lewis/dp/0393361338"
+  },
+  {
+    "title": "The Power of Habit: Why We Do What We Do in Life and Business",
+    "author": "Charles Duhigg",
+    "category": "Psychology, Business, Self-Help, Habits",
+    "summary": "Explores the science of habit formation and how to change your habits.",
+    "amazonLink": "https://www.amazon.com/Power-Habit-What-Life-Business/dp/0393325261"
+  },
+  {
+    "title": "Smarter Faster Better: The Secrets of Being Productive in Life and Business",
+    "author": "Charles Duhigg",
+    "category": "Productivity, Business, Psychology, Self-Help",
+    "summary": "Offers insights into how to be more productive in all aspects of life.",
+    "amazonLink": "https://www.amazon.com/Smarter-Faster-Better-Secrets-Productive/dp/081299330X"
+  },
+  {
+    "title": "The Checklist Manifesto: How to Get Things Right",
+    "author": "Atul Gawande",
+    "category": "Medicine, Business, Productivity, Checklists",
+    "summary": "Explores the power of checklists to improve performance in various fields.",
+    "amazonLink": "https://www.amazon.com/Checklist-Manifesto-How-Things-Right/dp/0307463644"
+  },
+  {
+    "title": "Being Mortal: Medicine and What Matters in the End",
+    "author": "Atul Gawande",
+    "category": "Medicine, Aging, Death, Healthcare",
+    "summary": "A thoughtful examination of aging, death, and the role of medicine in end-of-life care.",
+    "amazonLink": "https://www.amazon.com/Being-Mortal-Medicine-Matters-End/dp/0805095152"
+  },
+  {
+    "title": "Complications: A Surgeon's Notes on an Imperfect Science",
+    "author": "Atul Gawande",
+    "category": "Medicine, Surgery, Healthcare",
+    "summary": "A collection of essays on the complexities and uncertainties of medicine.",
+    "amazonLink": "https://www.amazon.com/Complications-Surgeons-Notes-Imperfect-Science/dp/0805076233"
+  },
+  {
+    "title": "Better: A Surgeon's Notes on Performance",
+    "author": "Atul Gawande",
+    "category": "Medicine, Surgery, Healthcare",
+    "summary": "Explores how to improve performance in medicine and other fields.",
+    "amazonLink": "https://www.amazon.com/Better-Surgeons-Notes-Performance/dp/0307277839"
+  },
+  {
+    "title": "The Emperor of All Maladies: A Biography of Cancer",
+    "author": "Siddhartha Mukherjee",
+    "category": "Science, Medicine, Cancer, History",
+    "summary": "A Pulitzer Prize-winning history of cancer.",
+    "amazonLink": "https://www.amazon.com/Emperor-All-Maladies-Biography-Cancer/dp/1439107955"
+  },
+  {
+    "title": "The Gene: An Intimate History",
+    "author": "Siddhartha Mukherjee",
+    "category": "Science, Genetics, Biology, History",
+    "summary": "A comprehensive history of genetics.",
+    "amazonLink": "https://www.amazon.com/Gene-Intimate-History-Siddhartha-Mukherjee/dp/1476733482"
+  },
+  {
+    "title": "The Song of the Cell: An Exploration of Medicine and the New Human",
+    "author": "Siddhartha Mukherjee",
+    "category": "Science, Medicine, Biology, Cells",
+    "summary": "An exploration of the cell and its role in health and disease.",
+    "amazonLink": "https://www.amazon.com/Song-Cell-Exploration-Medicine-Human/dp/1982117440"
+  },
+  {
+    "title": "Guns, Germs, and Steel: The Fates of Human Societies",
+    "author": "Jared Diamond",
+    "category": "History, Geography, Anthropology, Civilization",
+    "summary": "Explores why some societies have dominated others throughout history.",
+    "amazonLink": "https://www.amazon.com/Guns-Germs-Steel-Fates-Societies/dp/0393317552"
+  },
+  {
+    "title": "Collapse: How Societies Choose to Fail or Succeed",
+    "author": "Jared Diamond",
+    "category": "History, Environment, Sustainability, Civilization",
+    "summary": "Examines the factors that contribute to the collapse of societies.",
+    "amazonLink": "https://www.amazon.com/Collapse-Societies-Choose-Fail-Succeed/dp/0143036589"
+  },
+  {
+    "title": "The World Until Yesterday: What Can We Learn from Traditional Societies?",
+    "author": "Jared Diamond",
+    "category": "Anthropology, History, Sociology, Traditional Societies",
+    "summary": "Explores what modern societies can learn from traditional societies.",
+    "amazonLink": "https://www.amazon.com/World-Until-Yesterday-Traditional-Societies/dp/0143124444"
+  },
+  {
+    "title": "Upheaval: Turning Points for Nations in Crisis",
+    "author": "Jared Diamond",
+    "category": "History, Psychology, Crisis Management, National Identity",
+    "summary": "Examines how nations respond to crises.",
+    "amazonLink": "https://www.amazon.com/Upheaval-Turning-Points-Nations-Crisis/dp/0316409136"
+  },
+  {
+    "title": "The Third Chimpanzee: The Evolution and Future of the Human Animal",
+    "author": "Jared Diamond",
+    "category": "Science, Anthropology, Evolution, Human Nature",
+    "summary": "Explores the evolutionary origins of human behavior.",
+    "amazonLink": "https://www.amazon.com/Third-Chimpanzee-Evolution-Future-Animal/dp/0060845503"
+  },
+  {
+    "title": "Why Nations Fail: The Origins of Power, Prosperity, and Poverty",
+    "author": "Daron Acemoglu and James A. Robinson",
+    "category": "Economics, Political Science, Development, History",
+    "summary": "Explores the relationship between political institutions and economic development.",
+    "amazonLink": "https://www.amazon.com/Why-Nations-Fail-Origins-Prosperity/dp/0307386775"
+  },
+  {
+    "title": "The Narrow Corridor: How Nations Struggle for Liberty",
+    "author": "Daron Acemoglu and James A. Robinson",
+    "category": "Political Science, History, Liberty, State Capacity",
+    "summary": "Examines the delicate balance between state power and individual liberty.",
+    "amazonLink": "https://www.amazon.com/Narrow-Corridor-Nations-Struggle-Liberty/dp/0525521868"
+  },
+  {
+    "title": "Factfulness: Ten Reasons We're Wrong About the World – and Why Things Are Better Than You Think",
+    "author": "Hans Rosling, Ola Rosling, and Anna Rosling Rönnlund",
+    "category": "Statistics, Data, Global Development, Optimism",
+    "summary": "Challenges common misconceptions about the world and presents a more optimistic view of global progress.",
+    "amazonLink": "https://www.amazon.com/Factfulness-Reasons-Wrong-World-Things/dp/125010780X"
+  },
+  {
+    "title": "The Undercover Economist",
+    "author": "Tim Harford",
+    "category": "Economics, Behavioral Economics, Everyday Life",
+    "summary": "Explains economic principles through everyday examples.",
+    "amazonLink": "https://www.amazon.com/Undercover-Economist-Exposing-Hidden-Everywhere/dp/0195327286"
+  },
+  {
+    "title": "The Undercover Economist Strikes Back: How to Survive and Thrive in a Globalized World",
+    "author": "Tim Harford",
+    "category": "Economics, Globalization, Trade, Development",
+    "summary": "Explores the economic forces shaping the globalized world.",
+    "amazonLink": "https://www.amazon.com/Undercover-Economist-Strikes-Survive-Globalized/dp/0393068307"
+  },
+  {
+    "title": "The Logic of Collective Action: Public Goods and the Theory of Groups",
+    "author": "Mancur Olson",
+    "category": "Economics, Political Science, Public Goods, Collective Action",
+    "summary": "A classic work on the challenges of collective action and the provision of public goods.",
+    "amazonLink": "https://www.amazon.com/Logic-Collective-Action-Public-Theory/dp/0674537513"
+  },
+  {
+    "title": "The Rise and Decline of Nations: Economic Growth, Stagflation, and Social Rigidities",
+    "author": "Mancur Olson",
+    "category": "Economics, Political Science, Economic Growth, Institutional Sclerosis",
+    "summary": "Explores the factors that contribute to economic growth and decline.",
+    "amazonLink": "https://www.amazon.com/Rise-Decline-Nations-Economic-Stagflation/dp/0300030790"
+  },
+  {
+    "title": "Power and Plenty: Trade, War, and the World Economy in the Second Millennium",
+    "author": "Ronald Findlay and Kevin H. O'Rourke",
+    "category": "Economic History, Globalization, Trade, War",
+    "summary": "A comprehensive history of the world economy over the past millennium.",
+    "amazonLink": "https://www.amazon.com/Power-Plenty-Trade-Economy-Millennium/dp/069111854X"
+  },
+  {
+    "title": "A Splendid Exchange: How Trade Shaped the World",
+    "author": "William J. Bernstein",
+    "category": "Economic History, Globalization, Trade",
+    "summary": "A history of trade and its impact on the world.",
+    "amazonLink": "https://www.amazon.com/Splendid-Exchange-Trade-Shaped-World/dp/0802144160"
+  },
+  {
+    "title": "The Worldly Philosophers: The Lives, Times and Ideas of the Great Economic Thinkers",
+    "author": "Robert L. Heilbroner",
+    "category": "Economics, History of Economic Thought, Biography",
+    "summary": "An engaging introduction to the lives and ideas of major economic thinkers.",
+    "amazonLink": "https://www.amazon.com/Worldly-Philosophers-Lives-Times-Economic/dp/068486214X"
+  },
+  {
+    "title": "The Armchair Economist: Economics & Everyday Life",
+    "author": "Steven E. Landsburg",
+    "category": "Economics, Behavioral Economics, Everyday Life",
+    "summary": "Applies economic principles to a wide range of everyday situations.",
+    "amazonLink": "https://www.amazon.com/Armchair-Economist-Economics-Everyday-Explained/dp/0743259769"
+  },
+  {
+    "title": "Naked Economics: Undressing the Dismal Science",
+    "author": "Charles Wheelan",
+    "category": "Economics, Introduction to Economics",
+    "summary": "A clear and accessible introduction to basic economic principles.",
+    "amazonLink": "https://www.amazon.com/Naked-Economics-Undressing-Dismal-Science/dp/0393337660"
+  },
+  {
+    "title": "Economics in One Lesson",
+    "author": "Henry Hazlitt",
+    "category": "Economics, Classical Economics, Free Markets",
+    "summary": "A concise and powerful defense of free market principles.",
+    "amazonLink": "https://www.amazon.com/Economics-One-Lesson-Shortest-Understand/dp/0517548232"
+  },
+  {
+    "title": "Basic Economics: A Citizen's Guide to the Economy",
+    "author": "Thomas Sowell",
+    "category": "Economics, Introduction to Economics",
+    "summary": "A comprehensive and accessible introduction to economics.",
+    "amazonLink": "https://www.amazon.com/Basic-Economics-Citizens-Guide-Economy/dp/0465081452"
+  },
+  {
+    "title": "Applied Economics: Thinking Beyond Stage One",
+    "author": "Thomas Sowell",
+    "category": "Economics, Public Policy, Social Issues",
+    "summary": "Applies economic principles to a wide range of social and political issues.",
+    "amazonLink": "https://www.amazon.com/Applied-Economics-Thinking-Beyond-Stage/dp/0465081436"
+  },
+  {
+    "title": "Economic Facts and Fallacies",
+    "author": "Thomas Sowell",
+    "category": "Economics, Public Policy, Social Issues",
+    "summary": "Debunks common economic fallacies.",
+    "amazonLink": "https://www.amazon.com/Economic-Facts-Fallacies-Thomas-Sowell/dp/0465022039"
+  },
+  {
+    "title": "The Vision of the Anointed: Self-Congratulation as a Basis for Social Policy",
+    "author": "Thomas Sowell",
+    "category": "Social Criticism, Political Science, Public Policy",
+    "summary": "A critique of the intellectual and political elite.",
+    "amazonLink": "https://www.amazon.com/Vision-Anointed-Self-Congratulation-Basis-Social/dp/046508995X"
+  },
+  {
+    "title": "Intellectuals and Society",
+    "author": "Thomas Sowell",
+    "category": "Social Criticism, Political Science, Intellectual History",
+    "summary": "Examines the role of intellectuals in society.",
+    "amazonLink": "https://www.amazon.com/Intellectuals-Society-Expanded-Thomas-Sowell/dp/046501948X"
+  },
+  {
+    "title": "Discrimination and Disparities",
+    "author": "Thomas Sowell",
+    "category": "Economics, Sociology, Race, Discrimination",
+    "summary": "Explores the causes of disparities between groups.",
+    "amazonLink": "https://www.amazon.com/Discrimination-Disparities-Thomas-Sowell/dp/0465098002"
+  },
+  {
+    "title": "A Conflict of Visions: Ideological Origins of Political Struggles",
+    "author": "Thomas Sowell",
+    "category": "Political Science, Ideology, Social Philosophy",
+    "summary": "Examines the fundamental differences between competing political ideologies.",
+    "amazonLink": "https://www.amazon.com/Conflict-Visions-Ideological-Origins-Political/dp/0465002046"
+  },
+  {
+    "title": "The Quest for Cosmic Justice",
+    "author": "Thomas Sowell",
+    "category": "Social Justice, Political Philosophy, Ethics",
+    "summary": "A critique of the concept of cosmic justice.",
+    "amazonLink": "https://www.amazon.com/Quest-Cosmic-Justice-Thomas-Sowell/dp/0684864614"
+  },
+  {
+    "title": "Migrations and Cultures: A World View",
+    "author": "Thomas Sowell",
+    "category": "History, Anthropology, Migration, Culture",
+    "summary": "Examines the impact of migrations on cultures throughout history.",
+    "amazonLink": "https://www.amazon.com/Migrations-Cultures-World-View-Sowell/dp/0465081010"
+  },
+  {
+    "title": "Race and Culture: A World View",
+    "author": "Thomas Sowell",
+    "category": "Sociology, Anthropology, Race, Culture",
+    "summary": "Explores the relationship between race and culture.",
+    "amazonLink": "https://www.amazon.com/Race-Culture-World-View/dp/0465067979"
+  },
+  {
+    "title": "Black Rednecks and White Liberals",
+    "author": "Thomas Sowell",
+    "category": "Sociology, Race, Culture, History",
+    "summary": "Challenges conventional narratives about race and culture.",
+    "amazonLink": "https://www.amazon.com/Black-Rednecks-White-Liberals-Sowell/dp/1594032091"
+  },
+  {
+    "title": "Affirmative Action Around the World: An Empirical Study",
+    "author": "Thomas Sowell",
+    "category": "Affirmative Action, Public Policy, Sociology",
+    "summary": "Examines the effects of affirmative action policies around the world.",
+    "amazonLink": "https://www.amazon.com/Affirmative-Action-Around-World-Empirical/dp/0300099300"
+  },
+  {
+    "title": "The Economics and Politics of Race: An International Perspective",
+    "author": "Thomas Sowell",
+    "category": "Economics, Sociology, Race, Politics",
+    "summary": "Explores the economic and political dimensions of race relations.",
+    "amazonLink": "https://www.amazon.com/Economics-Politics-Race-International-Perspective/dp/0688064007"
+  },
+  {
+    "title": "Ethnic America: A History",
+    "author": "Thomas Sowell",
+    "category": "History, Immigration, Ethnicity, United States",
+    "summary": "A history of ethnic groups in the United States.",
+    "amazonLink": "https://www.amazon.com/Ethnic-America-History-Thomas-Sowell/dp/0465023973"
+  },
+  {
+    "title": "Conquests and Cultures: An International History",
+    "author": "Thomas Sowell",
+    "category": "History, Conquest, Culture, Civilization",
+    "summary": "Examines the impact of conquests on cultures throughout history.",
+    "amazonLink": "https://www.amazon.com/Conquests-Cultures-International-History/dp/0465014003"
+  },
+  {
+    "title": "Civil Rights: Rhetoric or Reality?",
+    "author": "Thomas Sowell",
+    "category": "Civil Rights, Race Relations, Public Policy",
+    "summary": "A critical examination of the civil rights movement and its legacy.",
+    "amazonLink": "https://www.amazon.com/Civil-Rights-Rhetoric-Reality-Sowell/dp/0688080770"
+  },
+  {
+    "title": "The Fair Housing Fraud",
+    "author": "William Tucker",
+    "category": "Housing Policy, Public Policy, Economics",
+    "summary": "A critical analysis of fair housing policies.",
+    "amazonLink": "https://www.amazon.com/Fair-Housing-Fraud-William-Tucker/dp/093678318X"
+  },
+  {
+    "title": "Progress and Privilege: America in the Age of Environmentalism",
+    "author": "William Tucker",
+    "category": "Environmentalism, Public Policy, Economics",
+    "summary": "A critical examination of environmentalism.",
+    "amazonLink": "https://www.amazon.com/Progress-Privilege-America-Age-Environmentalism/dp/093678304X"
+  },
+  {
+    "title": "War and the State: The Theory of International Politics",
+    "author": "Randall G. Schweller",
+    "category": "International Relations, Political Science, War",
+    "summary": "A theoretical framework for understanding international politics and war.",
+    "amazonLink": "https://www.amazon.com/War-State-Theory-International-Politics/dp/0786449276"
+  },
+  {
+    "title": "The Tragedy of Great Power Politics",
+    "author": "John J. Mearsheimer",
+    "category": "International Relations, Political Science, Realism",
+    "summary": "A realist perspective on international relations and great power competition.",
+    "amazonLink": "https://www.amazon.com/Tragedy-Great-Power-Politics-Updated/dp/0393353556"
+  },
+  {
+    "title": "The Israel Lobby and U.S. Foreign Policy",
+    "author": "John J. Mearsheimer and Stephen M. Walt",
+    "category": "International Relations, Political Science, Middle East, US Foreign Policy",
+    "summary": "A controversial analysis of the influence of the Israel lobby on US foreign policy.",
+    "amazonLink": "https://www.amazon.com/Israel-Lobby-U-S-Foreign-Policy/dp/0374531271"
+  },
+  {
+    "title": "Destined for War: Can America and China Escape Thucydides's Trap?",
+    "author": "Graham Allison",
+    "category": "International Relations, Political Science, China, US Foreign Policy",
+    "summary": "Explores the potential for conflict between the United States and China.",
+    "amazonLink": "https://www.amazon.com/Destined-War-America-China-Thucydides/dp/0544935262"
+  },
+  {
+    "title": "The World Is Flat: A Brief History of the Twenty-first Century",
+    "author": "Thomas L. Friedman",
+    "category": "Globalization, Business, Technology, Economics",
+    "summary": "Explores the forces driving globalization in the 21st century.",
+    "amazonLink": "https://www.amazon.com/World-Flat-History-Twenty-first-Century/dp/0374292884"
+  },
+  {
+    "title": "The Lexus and the Olive Tree: Understanding Globalization",
+    "author": "Thomas L. Friedman",
+    "category": "Globalization, Business, Technology, Economics",
+    "summary": "Examines the cultural and economic dimensions of globalization.",
+    "amazonLink": "https://www.amazon.com/Lexus-Olive-Tree-Understanding-Globalization/dp/0374527582"
+  },
+  {
+    "title": "The World Is Flat 3.0: A Brief History of the Twenty-first Century",
+    "author": "Thomas L. Friedman",
+    "category": "Globalization, Business, Technology, Economics",
+    "summary": "An updated edition of 'The World Is Flat,'' incorporating recent developments.",
+    "amazonLink": "https://www.amazon.com/World-Flat-3-0-Twenty-first-Century-Updated/dp/0374292884"
+  },
+  {
+    "title": "Thank You for Being Late: An Optimist's Guide to Thriving in the Age of Accelerations",
+    "author": "Thomas L. Friedman",
+    "category": "Technology, Globalization, Society, Future",
+    "summary": "Explores the rapid pace of change in the 21st century and how to adapt.",
+    "amazonLink": "https://www.amazon.com/Thank-You-Being-Late-Optimists/dp/0374273537"
+  },
+  {
+    "title": "The Guns of August",
+    "author": "Barbara W. Tuchman",
+    "category": "History, World War I, Diplomacy",
+    "summary": "A Pulitzer Prize-winning account of the first month of World War I.",
+    "amazonLink": "https://www.amazon.com/Guns-August-Barbara-W-Tuchman/dp/034538623X"
+  },
+  {
+    "title": "A Distant Mirror: The Calamitous 14th Century",
+    "author": "Barbara W. Tuchman",
+    "category": "History, Middle Ages, 14th Century",
+    "summary": "A vivid portrait of the 14th century, a time of war, plague, and social upheaval.",
+    "amazonLink": "https://www.amazon.com/Distant-Mirror-Calamitous-Fourteenth-Century/dp/0345349571"
+  },
+  {
+    "title": "The March of Folly: From Troy to Vietnam",
+    "author": "Barbara W. Tuchman",
+    "category": "History, Political Science, Decision Making",
+    "summary": "Examines historical examples of government folly.",
+    "amazonLink": "https://www.amazon.com/March-Folly-Troy-Vietnam/dp/0345308239"
+  },
+  {
+    "title": "The Proud Tower: A Portrait of the World Before the War, 1890-1914",
+    "author": "Barbara W. Tuchman",
+    "category": "History, World War I, Belle Epoque",
+    "summary": "A portrait of the world in the years leading up to World War I.",
+    "amazonLink": "https://www.amazon.com/Proud-Tower-Portrait-Before-1890-1914/dp/0345405013"
+  },
+  {
+    "title": "Stilwell and the American Experience in China, 1911-45",
+    "author": "Barbara W. Tuchman",
+    "category": "History, World War II, China, US Foreign Policy",
+    "summary": "A biography of General Joseph Stilwell and an account of US involvement in China during World War II.",
+    "amazonLink": "https://www.amazon.com/Stilwell-American-Experience-China-1911-45/dp/0345287565"
+  },
+  {
+    "title": "The Zimmerman Telegram",
+    "author": "Barbara W. Tuchman",
+    "category": "History, World War I, Diplomacy",
+    "summary": "An account of the Zimmerman Telegram, a key event that led to the US entry into World War I.",
+    "amazonLink": "https://www.amazon.com/Zimmerman-Telegram-Barbara-W-Tuchman/dp/0345402707"
+  },
+  {
+    "title": "Practicing History: Selected Essays",
+    "author": "Barbara W. Tuchman",
+    "category": "History, Historiography, Essays",
+    "summary": "A collection of essays on the craft of history writing.",
+    "amazonLink": "https://www.amazon.com/Practicing-History-Selected-Essays/dp/0345342372"
+  },
+  {
+    "title": "The Guns of August",
+    "author": "Barbara W. Tuchman",
+    "category": "History, World War I, Diplomacy",
+    "summary": "A Pulitzer Prize-winning account of the first month of World War I.",
+    "amazonLink": "https://www.amazon.com/Guns-August-Barbara-W-Tuchman/dp/034538623X"
+  },
+  {
+    "title": "The Hinge of Fate",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The fourth volume of Churchill's history of World War II, covering the turning point of the war.",
+    "amazonLink": "https://www.amazon.com/Hinge-Fate-Second-World-War/dp/0395410589"
+  },
+  {
+    "title": "Their Finest Hour",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The second volume of Churchill's history of World War II, covering the Battle of Britain.",
+    "amazonLink": "https://www.amazon.com/Their-Finest-Hour-Second-World/dp/0395410562"
+  },
+  {
+    "title": "The Gathering Storm",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The first volume of Churchill's history of World War II, covering the years leading up to the war.",
+    "amazonLink": "https://www.amazon.com/Gathering-Storm-Second-World-War/dp/0395410554"
+  },
+  {
+    "title": "The Grand Alliance",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The third volume of Churchill's history of World War II, covering the year 1941.",
+    "amazonLink": "https://www.amazon.com/Grand-Alliance-Second-World-War/dp/0395410570"
+  },
+  {
+    "title": "Triumph and Tragedy",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The fifth and final volume of Churchill's history of World War II, covering the end of the war.",
+    "amazonLink": "https://www.amazon.com/Triumph-Tragedy-Second-World-War/dp/0395410600"
+  },
+  {
+    "title": "The Second World War (Abridged)",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "An abridged version of Churchill's six-volume history of World War II.",
+    "amazonLink": "https://www.amazon.com/Second-World-War-Abridged-Churchill/dp/0395416889"
+  },
+  {
+    "title": "Marlborough: His Life and Times",
+    "author": "Winston S. Churchill",
+    "category": "Biography, History, Military",
+    "summary": "A biography of John Churchill, 1st Duke of Marlborough, a prominent military leader.",
+    "amazonLink": "https://www.amazon.com/Marlborough-His-Life-Times-Churchill/dp/0226106330"
+  },
+  {
+    "title": "My Early Life",
+    "author": "Winston S. Churchill",
+    "category": "Autobiography, History",
+    "summary": "Churchill's account of his early life and military career.",
+    "amazonLink": "https://www.amazon.com/My-Early-Life-1874-1904/dp/0684826269"
+  },
+  {
+    "title": "The River War: An Historical Account of the Reconquest of the Soudan",
+    "author": "Winston S. Churchill",
+    "category": "History, Military, Sudan",
+    "summary": "Churchill's account of the British reconquest of the Sudan.",
+    "amazonLink": "https://www.amazon.com/River-War-Historical-Reconquest-Soudan/dp/0375753748"
+  },
+  {
+    "title": "The Story of the Malakand Field Force: An Episode of Frontier War",
+    "author": "Winston S. Churchill",
+    "category": "History, Military, India",
+    "summary": "Churchill's account of his experiences in the Malakand Field Force during the frontier war in India.",
+    "amazonLink": "https://www.amazon.com/Story-Malakand-Field-Force-Frontier/dp/1406736573"
+  },
+  {
+    "title": "London to Ladysmith via Pretoria",
+    "author": "Winston S. Churchill",
+    "category": "History, Military, Boer War",
+    "summary": "Churchill's account of his experiences as a war correspondent during the Boer War.",
+    "amazonLink": "https://www.amazon.com/London-Ladysmith-via-Pretoria/dp/1419192985"
+  },
+  {
+    "title": "Ian Fleming: The Man Behind James Bond",
+    "author": "Andrew Lycett",
+    "category": "Biography, Literature, James Bond",
+    "summary": "A biography of Ian Fleming, the creator of James Bond.",
+    "amazonLink": "https://www.amazon.com/Ian-Fleming-Man-Behind-James/dp/0752848085"
+  },
+  {
+    "title": "The Man Who Knew: The Life and Times of Alan Turing",
+    "author": "David Leavitt",
+    "category": "Biography, Science, Computing, Alan Turing",
+    "summary": "A biography of Alan Turing, a pioneer in computer science and codebreaking.",
+    "amazonLink": "https://www.amazon.com/Man-Who-Knew-Alan-Turing/dp/0393324605"
+  },
+  {
+    "title": "The Snowball: Warren Buffett and the Business of Life",
+    "author": "Alice Schroeder",
+    "category": "Biography, Business, Investing, Warren Buffett",
+    "summary": "The authorized biography of Warren Buffett, the legendary investor.",
+    "amazonLink": "https://www.amazon.com/Snowball-Warren-Buffett-Business-Life/dp/0553384619"
+  },
+  {
+    "title": "Titan: The Life of John D. Rockefeller, Sr.",
+    "author": "Ron Chernow",
+    "category": "Biography, Business, History, John D. Rockefeller",
+    "summary": "A Pulitzer Prize-winning biography of John D. Rockefeller, the founder of Standard Oil.",
+    "amazonLink": "https://www.amazon.com/Titan-Life-John-D-Rockefeller/dp/0679438084"
+  },
+  {
+    "title": "The House of Morgan: An American Banking Dynasty and the Rise of Modern Finance",
+    "author": "Ron Chernow",
+    "category": "History, Business, Finance, J.P. Morgan",
+    "summary": "A history of the Morgan banking dynasty and its role in the development of modern finance.",
+    "amazonLink": "https://www.amazon.com/House-Morgan-American-Banking-Dynasty/dp/0802138292"
+  },
+  {
+    "title": "Alexander Hamilton",
+    "author": "Ron Chernow",
+    "category": "Biography, History, American Revolution, Alexander Hamilton",
+    "summary": "A Pulitzer Prize-winning biography of Alexander Hamilton, one of the Founding Fathers of the United States.",
+    "amazonLink": "https://www.amazon.com/Alexander-Hamilton-Ron-Chernow/dp/0143034756"
+  },
+  {
+    "title": "Washington: A Life",
+    "author": "Ron Chernow",
+    "category": "Biography, History, American Revolution, George Washington",
+    "summary": "A Pulitzer Prize-winning biography of George Washington, the first President of the United States.",
+    "amazonLink": "https://www.amazon.com/Washington-Life-Ron-Chernow/dp/0143119955"
+  },
+  {
+    "title": "Grant",
+    "author": "Ron Chernow",
+    "category": "Biography, History, American Civil War, Ulysses S. Grant",
+    "summary": "A Pulitzer Prize-winning biography of Ulysses S. Grant, the 18th President of the United States.",
+    "amazonLink": "https://www.amazon.com/Grant-Ron-Chernow/dp/159420487X"
+  },
+  {
+    "title": "The Fish That Ate the Whale: The Life and Times of Sam Zemurray",
+    "author": "Rich Cohen",
+    "category": "Biography, Business, History, United Fruit Company",
+    "summary": "The story of Sam Zemurray, who built a banana empire and influenced Central American politics.",
+    "amazonLink": "https://www.amazon.com/Fish-That-Ate-Whale-Zemurray/dp/0374157911"
+  },
+  {
+    "title": "The Devil in the White City: Murder, Magic, and Madness at the Fair That Changed America",
+    "author": "Erik Larson",
+    "category": "History, True Crime, Chicago World's Fair",
+    "summary": "Interweaves the stories of the 1893 Chicago World's Fair and a serial killer who operated during the event.",
+    "amazonLink": "https://www.amazon.com/Devil-White-City-Madness-Changed/dp/0375725601"
+  },
+  {
+    "title": "In the Garden of Beasts: Love, Terror, and an American Family in Hitler's Berlin",
+    "author": "Erik Larson",
+    "category": "History, World War II, Nazi Germany",
+    "summary": "The story of the American ambassador to Germany and his family in the years leading up to World War II.",
+    "amazonLink": "https://www.amazon.com/Garden-Beasts-Terror-American-Hitlers/dp/0307408846"
+  },
+  {
+    "title": "Isaac's Storm: A Man, a Time, and the Deadliest Hurricane in History",
+    "author": "Erik Larson",
+    "category": "History, Weather, Disaster, Galveston Hurricane",
+    "summary": "A gripping account of the 1900 Galveston hurricane, one of the deadliest natural disasters in U.S. history.",
+    "amazonLink": "https://www.amazon.com/Isaacs-Storm-Deadliest-Hurricane-History/dp/0312427444"
+  },
+  {
+    "title": "The Splendid Ruin: Burning of Washington, 1814",
+    "author": "Erik Larson",
+    "category": "History, War of 1814, Burning of Washington",
+    "summary": "Recounts the burning of Washington, D.C., by British forces during the War of 1814.",
+    "amazonLink": "https://www.amazon.com/Splendid-Ruin-Burning-Washington-1814/dp/0307958298"
+  },
+  {
+    "title": "Thunderstruck",
+    "author": "Erik Larson",
+    "category": "History, True Crime, Science, Marconi",
+    "summary": "A tale of two intertwined stories: Guglielmo Marconi's development of wireless telegraphy and a murder case.",
+    "amazonLink": "https://www.amazon.com/Thunderstruck-Erik-Larson/dp/0307592704"
+  },
+  {
+    "title": "The Dead Hand: The Untold Story of the Cold War Arms Race and Its Dangerous Legacy",
+    "author": "David E. Hoffman",
+    "category": "History, Cold War, Nuclear Weapons, Military",
+    "summary": "A chilling account of the Cold War nuclear arms race and its lasting consequences.",
+    "amazonLink": "https://www.amazon.com/Dead-Hand-Untold-Dangerous-Legacy/dp/0385524370"
+  },
+  {
+    "title": "The Billion Dollar Spy: A True Story of Cold War Espionage and Betrayal",
+    "author": "David E. Hoffman",
+    "category": "History, Espionage, Cold War, Soviet Union",
+    "summary": "The true story of Adolf Tolkachev, a Soviet engineer who became the CIA's most valuable asset during the Cold War.",
+    "amazonLink": "https://www.amazon.com/Billion-Dollar-Spy-Espionage-Betrayal/dp/0385534155"
+  },
+  {
+    "title": "The Oligarchs: Wealth and Power in the New Russia",
+    "author": "David E. Hoffman",
+    "category": "History, Russia, Politics, Business, Oligarchy",
+    "summary": "An examination of the rise of the oligarchs in post-Soviet Russia.",
+    "amazonLink": "https://www.amazon.com/Oligarchs-Wealth-Power-Russia-ebook/dp/B000FC1L4K"
+  },
+  {
+    "title": "Putin's Kleptocracy: Who Owns Russia?",
+    "author": "Karen Dawisha",
+    "category": "Politics, Russia, Corruption, Putin",
+    "summary": "A detailed investigation into the corruption and kleptocracy that characterize Vladimir Putin's regime.",
+    "amazonLink": "https://www.amazon.com/Putins-Kleptocracy-Who-Owns-Russia/dp/1476795199"
+  },
+  {
+    "title": "Red Notice: A True Story of High Finance, Murder, and One Man's Fight for Justice",
+    "author": "Bill Browder",
+    "category": "Business, True Crime, Russia, Finance, Corruption",
+    "summary": "Bill Browder's account of his fight for justice after exposing corruption in Russia and the murder of his lawyer, Sergei Magnitsky.",
+    "amazonLink": "https://www.amazon.com/Red-Notice-Finance-Murder-Justice/dp/147675571X"
+  },
+  {
+    "title": "Freezing Order: A True Story of Money Laundering, Murder, and Surviving Putin's Wrath",
+    "author": "Bill Browder",
+    "category": "Business, True Crime, Russia, Finance, Corruption",
+    "summary": "The sequel to 'Red Notice', detailing Bill Browder's continued efforts to expose corruption and seek justice for Sergei Magnitsky.",
+    "amazonLink": "https://www.amazon.com/Freezing-Order-Laundering-Surviving-Putins/dp/1501166843"
+  },
+  {
+    "title": "Bad Blood: Secrets and Lies in a Silicon Valley Startup",
+    "author": "John Carreyrou",
+    "category": "Business, True Crime, Technology, Theranos",
+    "summary": "The story of the rise and fall of Theranos, a blood-testing company founded by Elizabeth Holmes.",
+    "amazonLink": "https://www.amazon.com/Bad-Blood-Secrets-Silicon-Startup/dp/0385543168"
+  },
+  {
+    "title": "The Informant: A True Story of Money, Medicine, and Murder",
+    "author": "Kurt Eichenwald",
+    "category": "Business, True Crime, Pharmaceutical Industry",
+    "summary": "An exposé of price-fixing and corruption in the pharmaceutical industry.",
+    "amazonLink": "https://www.amazon.com/Informant-Story-Medicine-Murder-ebook/dp/B000FC2932"
+  },
+  {
+    "title": "Den of Thieves",
+    "author": "James B. Stewart",
+    "category": "Business, True Crime, Finance, Insider Trading",
+    "summary": "An account of the insider trading scandals of the 1980s.",
+    "amazonLink": "https://www.amazon.com/Den-Thieves-James-Stewart/dp/0671701625"
+  },
+  {
+    "title": "Blind Ambition: The White House Years",
+    "author": "John Ehrlichman",
+    "category": "Politics, Memoir, Watergate Scandal",
+    "summary": "A memoir by John Ehrlichman, a key figure in the Watergate scandal.",
+    "amazonLink": "https://www.amazon.com/Blind-Ambition-White-House-Years/dp/0671848387"
+  },
+  {
+    "title": "All the President's Men",
+    "author": "Carl Bernstein and Bob Woodward",
+    "category": "Journalism, Watergate Scandal, Politics",
+    "summary": "The classic account of the Watergate scandal by the reporters who broke the story.",
+    "amazonLink": "https://www.amazon.com/All-Presidents-Men-Carl-Bernstein/dp/067121781X"
+  },
+  {
+    "title": "The Final Days",
+    "author": "Bob Woodward and Carl Bernstein",
+    "category": "Journalism, Watergate Scandal, Politics",
+    "summary": "A detailed account of the final days of the Nixon presidency.",
+    "amazonLink": "https://www.amazon.com/Final-Days-Bob-Woodward/dp/0671222968"
+  },
+
+  {
+    "title": "The Gathering Storm",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The first volume of Churchill's history of World War II, covering the years leading up to the war.",
+    "amazonLink": "https://www.amazon.com/Gathering-Storm-Second-World-War/dp/0395410554"
+  },
+  {
+    "title": "The Grand Alliance",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The third volume of Churchill's history of World War II, covering the year 1941.",
+    "amazonLink": "https://www.amazon.com/Grand-Alliance-Second-World-War/dp/0395410570"
+  },
+  {
+    "title": "Triumph and Tragedy",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "The fifth and final volume of Churchill's history of World War II, covering the end of the war.",
+    "amazonLink": "https://www.amazon.com/Triumph-Tragedy-Second-World-War/dp/0395410600"
+  },
+  {
+    "title": "The Second World War (Abridged)",
+    "author": "Winston S. Churchill",
+    "category": "History, World War II, Military",
+    "summary": "An abridged version of Churchill's six-volume history of World War II.",
+    "amazonLink": "https://www.amazon.com/Second-World-War-Abridged-Churchill/dp/0395416889"
+  },
+  {
+    "title": "Marlborough: His Life and Times",
+    "author": "Winston S. Churchill",
+    "category": "Biography, History, Military",
+    "summary": "A biography of John Churchill, 1st Duke of Marlborough, a prominent military leader.",
+    "amazonLink": "https://www.amazon.com/Marlborough-His-Life-Times-Churchill/dp/0226106330"
+  },
+  {
+    "title": "My Early Life",
+    "author": "Winston S. Churchill",
+    "category": "Autobiography, History",
+    "summary": "Churchill's account of his early life and military career.",
+    "amazonLink": "https://www.amazon.com/My-Early-Life-1874-1904/dp/0684826269"
+  },
+  {
+    "title": "The River War: An Historical Account of the Reconquest of the Soudan",
+    "author": "Winston S. Churchill",
+    "category": "History, Military, Sudan",
+    "summary": "Churchill's account of the British reconquest of the Sudan.",
+    "amazonLink": "https://www.amazon.com/River-War-Historical-Reconquest-Soudan/dp/0375753748"
+  },
+  {
+    "title": "The Story of the Malakand Field Force: An Episode of Frontier War",
+    "author": "Winston S. Churchill",
+    "category": "History, Military, India",
+    "summary": "Churchill's account of his experiences in the Malakand Field Force during the frontier war in India.",
+    "amazonLink": "https://www.amazon.com/Story-Malakand-Field-Force-Frontier/dp/1406736573"
+  },
+  {
+    "title": "London to Ladysmith via Pretoria",
+    "author": "Winston S. Churchill",
+    "category": "History, Military, Boer War",
+    "summary": "Churchill's account of his experiences as a war correspondent during the Boer War.",
+    "amazonLink": "https://www.amazon.com/London-Ladysmith-via-Pretoria/dp/1419192985"
+  },
+  {
+    "title": "Ian Fleming: The Man Behind James Bond",
+    "author": "Andrew Lycett",
+    "category": "Biography, Literature, James Bond",
+    "summary": "A biography of Ian Fleming, the creator of James Bond.",
+    "amazonLink": "https://www.amazon.com/Ian-Fleming-Man-Behind-James/dp/0752848085"
+  },
+  {
+    "title": "The Man Who Knew: The Life and Times of Alan Turing",
+    "author": "David Leavitt",
+    "category": "Biography, Science, Computing, Alan Turing",
+    "summary": "A biography of Alan Turing, a pioneer in computer science and codebreaking.",
+    "amazonLink": "https://www.amazon.com/Man-Who-Knew-Alan-Turing/dp/0393324605"
+  },
+  {
+    "title": "The Snowball: Warren Buffett and the Business of Life",
+    "author": "Alice Schroeder",
+    "category": "Biography, Business, Investing, Warren Buffett",
+    "summary": "The authorized biography of Warren Buffett, the legendary investor.",
+    "amazonLink": "https://www.amazon.com/Snowball-Warren-Buffett-Business-Life/dp/0553384619"
+  },
+  {
+    "title": "Titan: The Life of John D. Rockefeller, Sr.",
+    "author": "Ron Chernow",
+    "category": "Biography, Business, History, John D. Rockefeller",
+    "summary": "A Pulitzer Prize-winning biography of John D. Rockefeller, the founder of Standard Oil.",
+    "amazonLink": "https://www.amazon.com/Titan-Life-John-D-Rockefeller/dp/0679438084"
+  },
+  {
+    "title": "The House of Morgan: An American Banking Dynasty and the Rise of Modern Finance",
+    "author": "Ron Chernow",
+    "category": "History, Business, Finance, J.P. Morgan",
+    "summary": "A history of the Morgan banking dynasty and its role in the development of modern finance.",
+    "amazonLink": "https://www.amazon.com/House-Morgan-American-Banking-Dynasty/dp/0802138292"
+  },
+  {
+    "title": "Alexander Hamilton",
+    "author": "Ron Chernow",
+    "category": "Biography, History, American Revolution, Alexander Hamilton",
+    "summary": "A Pulitzer Prize-winning biography of Alexander Hamilton, one of the Founding Fathers of the United States.",
+    "amazonLink": "https://www.amazon.com/Alexander-Hamilton-Ron-Chernow/dp/0143034756"
+  },
+  {
+    "title": "Washington: A Life",
+    "author": "Ron Chernow",
+    "category": "Biography, History, American Revolution, George Washington",
+    "summary": "A Pulitzer Prize-winning biography of George Washington, the first President of the United States.",
+    "amazonLink": "https://www.amazon.com/Washington-Life-Ron-Chernow/dp/0143119955"
+  },
+  {
+    "title": "Grant",
+    "author": "Ron Chernow",
+    "category": "Biography, History, American Civil War, Ulysses S. Grant",
+    "summary": "A Pulitzer Prize-winning biography of Ulysses S. Grant, the 18th President of the United States.",
+    "amazonLink": "https://www.amazon.com/Grant-Ron-Chernow/dp/159420487X"
+  },
+  {
+    "title": "The Delusions of Gender: How Our Minds, Society, and Politics Create the Male-Female Divide",
+    "author": "Cordelia Fine",
+    "category": "Psychology, Neuroscience, Gender, Feminism",
+    "summary": "A critical examination of the science behind gender differences.",
+    "amazonLink": "https://www.amazon.com/Delusions-Gender-Society-Politics-Create/dp/0393352793"
+  },
+  {
+    "title": "Testosterone Rex: Myths of Sex, Science, and Society",
+    "author": "Cordelia Fine",
+    "category": "Psychology, Neuroscience, Gender, Endocrinology",
+    "summary": "Challenges the dominant narrative about the role of testosterone in shaping male behavior.",
+    "amazonLink": "https://www.amazon.com/Testosterone-Rex-Myths-Science-Society/dp/0393248230"
+  },
+  {
+    "title": "Misbehaving: The Making of Behavioral Economics",
+    "author": "Richard Thaler",
+    "category": "Economics, Behavioral Economics, Psychology",
+    "summary": "A history of behavioral economics and its impact on economic theory.",
+    "amazonLink": "https://www.amazon.com/Misbehaving-Behavioral-Economics-Richard-Thaler/dp/0393352793"
+  },
+  {
+    "title": "Nudge: Improving Decisions About Health, Wealth, and Happiness",
+    "author": "Richard Thaler and Cass Sunstein",
+    "category": "Economics, Behavioral Economics, Public Policy",
+    "summary": "Explores how to use \"nudges\" to influence people's behavior without restricting their freedom of choice.",
+    "amazonLink": "https://www.amazon.com/Nudge-Improving-Decisions-about-Happiness/dp/0143115269"
+  },
+  {
+    "title": "The Power of Moments: Why Certain Experiences Have Extraordinary Impact",
+    "author": "Chip Heath and Dan Heath",
+    "category": "Psychology, Business, Marketing, Experience Design",
+    "summary": "Explores the psychology of memorable experiences and how to create them.",
+    "amazonLink": "https://www.amazon.com/Power-Moments-Certain-Experiences-Extraordinary/dp/1501147771"
+  },
+  {
+    "title": "Made to Stick: Why Some Ideas Survive and Others Die",
+    "author": "Chip Heath and Dan Heath",
+    "category": "Psychology, Business, Communication, Marketing",
+    "summary": "Explores why some ideas are more memorable and persuasive than others.",
+    "amazonLink": "https://www.amazon.com/Made-Stick-Some-Ideas-Survive/dp/1400064280"
+  },
+  {
+    "title": "Switch: How to Change Things When Change Is Hard",
+    "author": "Chip Heath and Dan Heath",
+    "category": "Psychology, Business, Change Management, Self-Help",
+    "summary": "Offers a framework for understanding and overcoming resistance to change.",
+    "amazonLink": "https://www.amazon.com/Switch-Change-Things-When-Hard/dp/0321727206"
+  },
+  {
+    "title": "Decisive: How to Make Better Choices in Life and Work",
+    "author": "Chip Heath and Dan Heath",
+    "category": "Psychology, Business, Decision Making, Self-Help",
+    "summary": "Offers a framework for making better decisions.",
+    "amazonLink": "https://www.amazon.com/Decisive-How-Make-Better-Choices/dp/0321670155"
+  },
+  {
+    "title": "The Art of Thinking Clearly",
+    "author": "Rolf Dobelli",
+    "category": "Psychology, Cognitive Biases, Decision Making",
+    "summary": "Identifies and explains common cognitive biases that can lead to poor decision making.",
+    "amazonLink": "https://www.amazon.com/Art-Thinking-Clearly-Rolf-Dobelli/dp/0062219691"
+  },
+  {
+    "title": "Predictably Irrational: The Hidden Forces That Shape Our Decisions",
+    "author": "Dan Ariely",
+    "category": "Economics, Behavioral Economics, Psychology",
+    "summary": "Explores the irrational forces that shape our decisions.",
+    "amazonLink": "https://www.amazon.com/Predictably-Irrational-Hidden-Forces-Decisions/dp/006135323X"
+  },
+  {
+    "title": "The Upside of Irrationality: The Unexpected Benefits of Defying Logic at Work and at Home",
+    "author": "Dan Ariely",
+    "category": "Economics, Behavioral Economics, Psychology",
+    "summary": "Explores the potential benefits of irrationality.",
+    "amazonLink": "https://www.amazon.com/Upside-Irrationality-Unexpected-Benefits-Defying/dp/0061995048"
+  },
+  {
+    "title": "The Honest Truth About Dishonesty: How We Lie to Everyone—Especially Ourselves",
+    "author": "Dan Ariely",
+    "category": "Psychology, Behavioral Economics, Ethics",
+    "summary": "Explores the psychology of dishonesty.",
+    "amazonLink": "https://www.amazon.com/Honest-Truth-About-Dishonesty-Everyone-Especially/dp/0062183612"
+  },
+  {
+    "title": "Irrationally Yours: On Missing Socks, Pickup Lines, and Other Existential Puzzles",
+    "author": "Dan Ariely",
+    "category": "Psychology, Behavioral Economics, Everyday Life",
+    "summary": "Applies behavioral economics to a wide range of everyday situations.",
+    "amazonLink": "https://www.amazon.com/Irrationally-Yours-Missing-Pickup-Existential/dp/0062220677"
+  },
+  {
+    "title": "Dollars and Sense: How We Misthink Money and How to Spend Smarter",
+    "author": "Dan Ariely and Jeff Kreisler",
+    "category": "Economics, Behavioral Economics, Personal Finance",
+    "summary": "Explores how we misthink about money and how to make better financial decisions.",
+    "amazonLink": "https://www.amazon.com/Dollars-Sense-Misthink-Money-Smarter/dp/006243868X"
+  },
+  {
+    "title": "Payoff: The Hidden Logic That Shapes Our Motivations",
+    "author": "Dan Ariely",
+    "category": "Psychology, Behavioral Economics, Motivation",
+    "summary": "Explores the hidden logic that shapes our motivations.",
+    "amazonLink": "https://www.amazon.com/Payoff-Hidden-Logic-Shapes-Motivations/dp/1501112388"
+  },
+  {
+    "title": "The (Mis)Behavior of Markets: A Fractal View of Risk, Ruin, and Reward",
+    "author": "Benoit Mandelbrot",
+    "category": "Finance, Mathematics, Chaos Theory",
+    "summary": "Challenges traditional models of financial markets and introduces a fractal view of risk.",
+    "amazonLink": "https://www.amazon.com/MisBehavior-Markets-Fractal-View-Financial/dp/0465043550"
+  },
+  {
+    "title": "The Black Swan: The Impact of the Highly Improbable",
+    "author": "Nassim Nicholas Taleb",
+    "category": "Risk Management, Probability, Economics",
+    "summary": "An examination of rare events and their outsized impact on history.",
+    "amazonLink": "https://www.amazon.com/Black-Swan-Improbable-Robustness-Fragility/dp/081297381X"
+  },
+  {
+    "title": "Fooled by Randomness: The Hidden Role of Chance in Life and in the Markets",
+    "author": "Nassim Nicholas Taleb",
+    "category": "Probability, Risk Management, Psychology",
+    "summary": "Explores the role of chance and randomness in our lives and in financial markets.",
+    "amazonLink": "https://www.amazon.com/Fooled-Randomness-Hidden-Markets-Incerto/dp/0812975219"
+  },
+  {
+    "title": "Antifragile: Things That Gain from Disorder",
+    "author": "Nassim Nicholas Taleb",
+    "category": "Risk Management, Philosophy, Systems Thinking",
+    "summary": "Introduces the concept of \"antifragility\" and explores how systems can benefit from disorder and randomness.",
+    "amazonLink": "https://www.amazon.com/Antifragile-Things-That-Gain-Disorder/dp/0812975219"
+  },
+  {
+    "title": "Skin in the Game: Hidden Asymmetries in Daily Life",
+    "author": "Nassim Nicholas Taleb",
+    "category": "Risk Management, Philosophy, Ethics",
+    "summary": "Argues that people should have \"skin in the game\" – i.e., they should bear the consequences of their actions.",
+    "amazonLink": "https://www.amazon.com/Skin-Game-Hidden-Asymmetries-Daily/dp/0812975219"
+  },
+  {
+    "title": "The Bed of Procrustes: Philosophical and Practical Aphorisms",
+    "author": "Nassim Nicholas Taleb",
+    "category": "Philosophy, Aphorisms, Wisdom",
+    "summary": "A collection of aphorisms on a wide range of topics.",
+    "amazonLink": "https://www.amazon.com/Bed-Procrustes-Philosophical-Practical-Aphorisms/dp/0812975219"
+  },
+  {
+    "title": "Thinking, Fast and Slow",
+    "author": "Daniel Kahneman",
+    "category": "Behavioral Economics, Psychology, Decision Making",
+    "summary": "Explores the two systems that drive the way we think.",
+    "amazonLink": "https://www.amazon.com/Thinking-Fast-Slow-Daniel-Kahneman/dp/0374275633"
+  },
+  {
+    "title": "Noise: A Flaw in Human Judgment",
+    "author": "Daniel Kahneman, Olivier Sibony, and Cass Sunstein",
+    "category": "Psychology, Decision Making, Judgment",
+    "summary": "Explores the problem of \"noise\" in human judgment and how to reduce it.",
+    "amazonLink": "https://www.amazon.com/Noise-Flaw-Human-Judgment/dp/0316451422"
+  },
+  {
+    "title": "Stumbling on Happiness",
+    "author": "Daniel Gilbert",
+    "category": "Psychology, Happiness, Behavioral Economics",
+    "summary": "Explores the science of happiness and how we often mispredict what will make us happy.",
+    "amazonLink": "https://www.amazon.com/Stumbling-Happiness-Daniel-Gilbert/dp/0375704181"
+  },
+  {
+    "title": "The Happiness Hypothesis: Finding Modern Truth in Ancient Wisdom",
+    "author": "Jonathan Haidt",
+    "category": "Psychology, Happiness, Philosophy",
+    "summary": "Explores the science of happiness and how it relates to ancient wisdom.",
+    "amazonLink": "https://www.amazon.com/Happiness-Hypothesis-Finding-Modern-Ancient/dp/0465029025"
+  },
+  {
+    "title": "The Righteous Mind: Why Good People Are Divided by Politics and Religion",
+    "author": "Jonathan Haidt",
+    "category": "Psychology, Morality, Politics, Religion",
+    "summary": "Explores the psychological foundations of morality and how they contribute to political and religious divisions.",
+    "amazonLink": "https://www.amazon.com/Righteous-Mind-Good-People-Divided/dp/0307377903"
+  },
+  {
+    "title": "The Coddling of the American Mind: How Good Intentions and Bad Ideas Are Setting Up a Generation for Failure",
+    "author": "Greg Lukianoff and Jonathan Haidt",
+    "category": "Psychology, Education, Culture, Free Speech",
+    "summary": "Argues that well-intentioned but misguided ideas about safety and harm are harming young people and undermining free speech on college campuses.",
+    "amazonLink": "https://www.amazon.com/Coddling-American-Mind-Intentions-Generation/dp/0735224897"
+  },
+  {
+    "title": "The WEIRDest People in the World: How the West Became Psychologically Peculiar and Particularly Prosperous",
+    "author": "Joseph Henrich",
+    "category": "Psychology, Anthropology, History, Culture",
+    "summary": "Explores the psychological peculiarities of Westerners and how they contributed to the West's economic and technological success.",
+    "amazonLink": "https://www.amazon.com/WEIRDest-People-World-Psychologically-Particularly/dp/0374292884"
+  },
+  {
+    "title": "Behave: The Biology of Humans at Our Best and Worst",
+    "author": "Robert Sapolsky",
+    "category": "Psychology, Neuroscience, Biology, Behavior",
+    "summary": "Explores the biological basis of human behavior, from the level of genes to the level of culture.",
+    "amazonLink": "https://www.amazon.com/Behave-Biology-Humans-Best-Worst/dp/1594205078"
+  },
+  {
+    "title": "Games People Play: The Psychology of Human Relationships",
+    "author": "Eric Berne",
+    "category": "Psychology, Communication, Relationships",
+    "summary": "Introduces the concept of \"games\" in human relationships and explores how they can be used to understand and improve communication.",
+    "amazonLink": "https://www.amazon.com/Games-People-Play-Psychology-Relationships/dp/0345410031"
+  },
+  {
+    "title": "Influence: The Psychology of Persuasion",
+    "author": "Robert Cialdini",
+    "category": "Psychology, Marketing, Negotiation",
+    "summary": "Explains the psychology of why people say yes and how to apply these insights.",
+    "amazonLink": "https://www.amazon.com/Influence-Psychology-Persuasion-Robert-Cialdini/dp/006124189X"
+  },
+  {
+    "title": "Pre-Suasion: A Revolutionary Way to Influence and Persuade",
+    "author": "Robert Cialdini",
+    "category": "Psychology, Marketing, Negotiation",
+    "summary": "Explores the importance of the moments before persuasion and how to use them to increase your influence.",
+    "amazonLink": "https://www.amazon.com/Pre-Suasion-Revolutionary-Influence-Persuade/dp/1501112388"
+  },
+  {
+    "title": "The 7 Habits of Highly Effective People: Powerful Lessons in Personal Change",
+    "author": "Stephen R. Covey",
+    "category": "Self-Help, Personal Development, Leadership",
+    "summary": "Presents a framework for personal and professional effectiveness.",
+    "amazonLink": "https://www.amazon.com/Habits-Highly-Effective-People/dp/0684864614"
+  },
+  {
+    "title": "The 8th Habit: From Effectiveness to Greatness",
+    "author": "Stephen R. Covey",
+    "category": "Self-Help, Personal Development, Leadership",
+    "summary": "A follow-up to \"The 7 Habits,\" focusing on achieving greatness.",
+    "amazonLink": "https://www.amazon.com/8th-Habit-Effectiveness-Greatness/dp/0743289525"
+  },
+  {
+    "title": "The Speed of Trust: The One Thing That Changes Everything",
+    "author": "Stephen M. R. Covey",
+    "category": "Leadership, Business, Trust",
+    "summary": "Explores the importance of trust in leadership and business.",
+    "amazonLink": "https://www.amazon.com/Speed-Trust-Thing-Changes-Everything/dp/0743289525"
+  },
+  {
+    "title": "Mindset: The New Psychology of Success",
+    "author": "Carol S. Dweck",
+    "category": "Psychology, Motivation, Achievement, Success",
+    "summary": "Explores the power of mindset and how it can influence our success.",
+    "amazonLink": "https://www.amazon.com/Mindset-Psychology-Success-Updated-Edition/dp/140006275X"
+  },
+  {
+    "title": "Grit: The Power of Passion and Perseverance",
+    "author": "Angela Duckworth",
+    "category": "Psychology, Motivation, Achievement, Success",
+    "summary": "Explores the importance of grit – i.e., passion and perseverance – in achieving success.",
+    "amazonLink": "https://www.amazon.com/Grit-Passion-Perseverance-Angela-Duckworth/dp/1501111108"
+  },
+  {
+    "title": "Drive: The Surprising Truth About What Motivates Us",
+    "author": "Daniel H. Pink",
+    "category": "Psychology, Motivation, Business, Management",
+    "summary": "Explores the science of motivation and challenges traditional approaches to motivating employees.",
+    "amazonLink": "https://www.amazon.com/Drive-Surprising-Truth-About-Motivates/dp/1594488843"
+  },
+  {
+    "title": "A Whole New Mind: Why Right-Brainers Will Rule the Future",
+    "author": "Daniel H. Pink",
+    "category": "Business, Creativity, Innovation, Future",
+    "summary": "Argues that \"right-brain\" skills such as creativity and empathy will be increasingly important in the future.",
+    "amazonLink": "https://www.amazon.com/Whole-New-Mind-Right-Brainers-Future/dp/1594481717"
+  },
+  {
+    "title": "To Sell Is Human: The Surprising Truth About Moving Others",
+    "author": "Daniel H. Pink",
+    "category": "Sales, Marketing, Psychology, Persuasion",
+    "summary": "Explores the psychology of selling and how to become more persuasive.",
+    "amazonLink": "https://www.amazon.com/Sell-Human-Surprising-Truth-About/dp/1594481717"
+  },
+  {
+    "title": "When: The Scientific Secrets of Perfect Timing",
+    "author": "Daniel H. Pink",
+    "category": "Psychology, Productivity, Time Management",
+    "summary": "Explores the science of timing and how to make better decisions about when to do things.",
+    "amazonLink": "https://www.amazon.com/When-Scientific-Secrets-Perfect-Timing/dp/1594481717"
+  },
+  {
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "category": "Strategy, Leadership, Military",
+    "summary": "An ancient Chinese military treatise that is still relevant today.",
+    "amazonLink": "https://www.amazon.com/Art-War-Sun-Tzu/dp/0195189741"
+  },
+  {
+    "title": "On War",
+    "author": "Carl von Clausewitz",
+    "category": "Strategy, Military, History",
+    "summary": "A classic work on military strategy.",
+    "amazonLink": "https://www.amazon.com/War-Carl-von-Clausewitz/dp/0691018545"
+  },
+  {
+    "title": "The Prince",
+    "author": "Niccolò Machiavelli",
+    "category": "Political Science, Leadership, Strategy",
+    "summary": "A classic work on political philosophy and leadership.",
+    "amazonLink": "https://www.amazon.com/Prince-Niccolo-Machiavelli/dp/0226500446"
+  },
+  {
+    "title": "The 48 Laws of Power",
+    "author": "Robert Greene",
+    "category": "Strategy, Leadership, Power",
+    "summary": "A controversial but influential book on how to gain and maintain power.",
+    "amazonLink": "https://www.amazon.com/48-Laws-Power-Robert-Greene/dp/014028169X"
+  },
+  {
+    "title": "The 33 Strategies of War",
+    "author": "Robert Greene",
+    "category": "Strategy, Leadership, Military",
+    "summary": "Applies military strategy to a wide range of situations in life and business.",
+    "amazonLink": "https://www.amazon.com/33-Strategies-War-Robert-Greene/dp/0143038425"
+  },
+  {
+    "title": "The 50th Law",
+    "author": "50 Cent and Robert Greene",
+    "category": "Self-Help, Success, Strategy",
+    "summary": "Applies the principles of strategy and power to achieving success in life.",
+    "amazonLink": "https://www.amazon.com/50th-Law-50-Cent/dp/0061391905"
+  },
+  {
+    "title": "Mastery",
+    "author": "Robert Greene",
+    "category": "Self-Help, Success, Mastery",
+    "summary": "Explores the principles of mastery and how to achieve it in any field.",
+    "amazonLink": "https://www.amazon.com/Mastery-Robert-Greene/dp/0143124177"
+  },
+  {
+    "title": "The Laws of Human Nature",
+    "author": "Robert Greene",
+    "category": "Psychology, Human Nature, Social Intelligence",
+    "summary": "Explores the fundamental laws of human nature and how to understand and influence others.",
+    "amazonLink": "https://www.amazon.com/Laws-Human-Nature-Robert-Greene/dp/0143132439"
+  },
+  {
+    "title": "Seduction",
+    "author": "Robert Greene",
+    "category": "Psychology, Relationships, Seduction",
+    "summary": "Explores the art of seduction.",
+    "amazonLink": "https://www.amazon.com/Art-Seduction-Robert-Greene/dp/0143034004"
+  },
+  {
+    "title": "The Daily Laws",
+    "author": "Robert Greene",
+    "category": "Self-Help, Philosophy, Wisdom",
+    "summary": "A daily guide to applying the principles of strategy, power, and mastery to your life.",
+    "amazonLink": "https://www.amazon.com/Daily-Laws-Robert-Greene/dp/0143132439"
+  },
+  {
+    "title": "The Book of Five Rings",
+    "author": "Miyamoto Musashi",
+    "category": "Strategy, Martial Arts, Philosophy",
+    "summary": "A classic work on swordsmanship and strategy by a legendary Japanese samurai.",
+    "amazonLink": "https://www.amazon.com/Book-Five-Rings-Miyamoto-Musashi/dp/1590309849"
+  },
+  {
+    "title": "Hagakure: The Book of the Samurai",
+    "author": "Yamamoto Tsunetomo",
+    "category": "Philosophy, Samurai, Bushido",
+    "summary": "A guide to the way of the samurai.",
+    "amazonLink": "https://www.amazon.com/Hagakure-Book-Samurai-Yamamoto-Tsunetomo/dp/159030250X"
+  },
+  {
+    "title": "The Art of Worldly Wisdom",
+    "author": "Baltasar Gracián",
+    "category": "Philosophy, Wisdom, Social Intelligence",
+    "summary": "A guide to navigating the social world and achieving success.",
+    "amazonLink": "https://www.amazon.com/Art-Worldly-Wisdom-Baltasar-Gracian/dp/0385507926"
+  },
+  {
+    "title": "Meditations",
+    "author": "Marcus Aurelius",
+    "category": "Philosophy, Stoicism, Self-Improvement",
+    "summary": "A collection of personal reflections by a Roman emperor and Stoic philosopher.",
+    "amazonLink": "https://www.amazon.com/Meditations-Marcus-Aurelius/dp/0140431257"
+  },
+  {
+    "title": "Letters from a Stoic",
+    "author": "Seneca",
+    "category": "Philosophy, Stoicism, Ethics",
+    "summary": "A collection of letters on Stoic philosophy and ethics.",
+    "amazonLink": "https://www.amazon.com/Letters-Stoic-Seneca/dp/0140442100"
+  },
+  {
+    "title": "The Enchiridion",
+    "author": "Epictetus",
+    "category": "Philosophy, Stoicism, Self-Improvement",
+    "summary": "A manual for living a good life according to Stoic principles.",
+    "amazonLink": "https://www.amazon.com/Enchiridion-Epictetus/dp/0872203120"
+  },
+  {
+    "title": "Tao Te Ching",
+    "author": "Lao Tzu",
+    "category": "Philosophy, Taoism, Spirituality",
+    "summary": "A foundational text of Taoism.",
+    "amazonLink": "https://www.amazon.com/Tao-Te-Ching-Lao-Tzu/dp/0140441309"
+  },
+  {
+    "title": "The Analects",
+    "author": "Confucius",
+    "category": "Philosophy, Confucianism, Ethics",
+    "summary": "A collection of sayings and ideas attributed to Confucius.",
+    "amazonLink": "https://www.amazon.com/Analects-Confucius/dp/0140449539"
+  }
+        ];
+
+        function removeDuplicates(books) {
+    const uniqueBooks = [];
+    const seenTitles = new Set();
+
+    for (const book of books) {
+        if (!seenTitles.has(book.title)) {
+            seenTitles.add(book.title);
+            uniqueBooks.push(book);
+        }
+    }
+
+    return uniqueBooks;
+}
+
+books = removeDuplicates(books);
+
+function renderCategories() {
+    const allCategories = books.flatMap(book => book.category.split(', ').map(c => c.trim()));
+    const categories = ['All Books', ...new Set(allCategories)]; // Add "All Books" first
+    const nav = document.getElementById('categories');
+    nav.innerHTML = categories.map(category => 
+        `<button onclick="filterBooks('${category}')">${category}</button>`
+    ).join('');
+}
+
+function filterBooks(category) {
+    // Remove 'active' class from all buttons
+    document.querySelectorAll('#categories button').forEach(btn => btn.classList.remove('active'));
+    
+    // Add 'active' class to the clicked button
+    event.target.classList.add('active');
+
+    const searchTerm = document.getElementById('searchInput').value;
+    const sortBy = document.getElementById('sortOptions').value;
+    renderBooks(category, searchTerm, sortBy);
+}
+
+function renderBooks(category = null, searchTerm = '', sortBy = 'title') {
+    const bookList = document.getElementById('bookList');
+    let filteredBooks = category === 'All Books' || category === null 
+        ? books 
+        : books.filter(book => book.category.split(', ').map(c => c.trim()).includes(category));
+
+    // Fuzzy Search (title or author)
+    if (searchTerm) {
+        filteredBooks = filteredBooks.filter(book => 
+            book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            book.category.toLowerCase().includes(searchTerm.toLowerCase()) 
+        );
+    }
+
+    // Sorting
+    if (sortBy === 'author') {
+        filteredBooks.sort((a, b) => a.author.localeCompare(b.author));
+    } else if (sortBy === 'category') {
+        filteredBooks.sort((a, b) => a.category.localeCompare(b.category));
+    } else { // Default: Sort by title
+        filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+    }
+
+    // Table Layout
+    const tableHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Summary</th> 
+                </tr>
+            </thead>
+            <tbody>
+                ${filteredBooks.map(book => `
+                    <tr>
+                        <td><a href="${book.amazonLink}" target="_blank" rel="noopener noreferrer">${book.title}</a></td>
+                        <td>${book.author}</td>
+                        <td>${book.category}</td>
+                        <td>${book.summary}</td> 
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    bookList.innerHTML = tableHTML; 
+}
+
+document.getElementById('searchInput').addEventListener('input', function() {
+    const category = document.querySelector('#categories button.active')?.textContent || 'All Books';
+    const sortBy = document.getElementById('sortOptions').value;
+    renderBooks(category, this.value, sortBy); 
+});
+
+document.getElementById('sortOptions').addEventListener('change', function() {
+    const category = document.querySelector('#categories button.active')?.textContent || 'All Books';
+    const searchTerm = document.getElementById('searchInput').value;
+    renderBooks(category, searchTerm, this.value);
+});
+
+// Initial render
+renderCategories();
+renderBooks();
+
+document.getElementById('searchInput').focus();
+    </script>
+</body>
+</html>
